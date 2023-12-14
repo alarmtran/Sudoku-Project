@@ -18,8 +18,5 @@ public class SudokuModel {
 	public static void main(String[] args) {
 		SudokuModel s = new SudokuModel();
 		s.makeNewGame();
-		
-
-
 	}
 }

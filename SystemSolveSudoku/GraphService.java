@@ -25,6 +25,8 @@ public class GraphService {
 	static Random r = new Random();
 	boolean refreshGame = true;
 
+	public ArrayList<ArrayList<Integer>> lastChoice = new ArrayList<>();
+	Graph graph;
 	public GraphService() {
 
 	}
@@ -237,7 +239,6 @@ public class GraphService {
 		for (int i = 0; i < SIZE; i++)
 			if (lastGraphSV.getMatrix()[row][i] == number)
 				return true;
-
 		return false;
 	}
 
@@ -259,7 +260,6 @@ public class GraphService {
 			for (int j = c; j < c + 3; j++)
 				if (lastGraphSV.getMatrix()[i][j] == number)
 					return true;
-
 		return false;
 	}
 
@@ -268,10 +268,53 @@ public class GraphService {
 		return !isInRow(row, number) && !isInCol(col, number) && !isInBox(row, col, number);
 	}
 
+	public boolean solve2(){
+		int[][] matrix = lastGraphSV.getMatrix();
+		graph = new Graph(lastGraphSV.getMatrix());
+		graph.init();
+		Vertex[] cells = graph.getCells();
+		for(int i=0;i< cells.length;i++){
+			if(cells[i].getValue() == 0){
+				ArrayList<Integer> listNumber = new ArrayList<>();
+				int[] check = new int[10];
+				for(int j=1;j<=9;j++){
+					listNumber.add(j);
+				}
+				ArrayList<Vertex> listNeighbor = graph.listVertex().get(i).getNeighbor();
+				//Loại dần màu sắc
+				for(Vertex v : listNeighbor){
+					if(listNumber.contains(v.getValue())){
+						check[v.getValue()] = 1;
+					}
+				}
+				//Tiến hành check xem số màu còn lại màu nào khả thi
+				int cot = i % 9;
+				int hang = i / 9;
+				for(int j=1;j<=9;j++){
+					if(check[j] == 0){
+						if(isInRow(hang,j) == false && isInCol(cot,j) == false && isInBox(hang,cot,j) == false){
+							lastGraphSV.getMatrix()[hang][cot] = j;
+							graph.listVertex().get(i).setValue(j);
+							//display2(lastGraphSV.getMatrix());
+							if(solve2()){
+								return true;
+							}else{
+								lastGraphSV.getMatrix()[hang][cot] = 0;
+							}
+						}
+					}
+				}
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 	//Hiện tại bọn em mới chỉ kịp làm backtracking , còn làm bằng đồ thị bọn em sẽ cố gắng hoàn thiện nốt và thuyết trình vào ngày 18/12
 
 	public boolean solve() {
-		for (int row = 0; row < SIZE; row++) {
+		/*for (int row = 0; row < SIZE; row++) {
 			for (int col = 0; col < SIZE; col++) {
 				//Bước đi tìm những ô trống do các phần tử bằng 0 là biểu thị cho các ô trống
 				if (lastGraphSV.getMatrix()[row][col] == 0) {
@@ -280,7 +323,7 @@ public class GraphService {
 						if (isOk(row, col, number)) {
 							//Nếu số đó ok thì đặt vào
 							lastGraphSV.getMatrix()[row][col] = number;
-
+							display2(lastGraphSV.getMatrix());
 							if (solve()) { //Tiến hành quay lui
 								return true;
 							} else { //Nếu ko giải được thì để = 0 ô đó và tieps tục thực hiện
@@ -288,11 +331,11 @@ public class GraphService {
 							}
 						}
 					}
-
 					return false;
 				}
 			}
 		}
-		return true;
+		return true;*/
+		return solve2();
 	}
 }

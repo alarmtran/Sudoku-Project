@@ -2,6 +2,7 @@ package group11.Views;
 
 import group11.Graphic_AND_Controller.Controller;
 import group11.Graphic_AND_Controller.GraphicBoard;
+import group11.SystemSolveSudoku.Graph;
 import group11.SystemSolveSudoku.SudokuModel;
 
 import javax.swing.*;
@@ -20,7 +21,7 @@ public class SudokuGame extends JFrame implements ActionListener {
 	int[][] state = new int[9][9];
 	int[][] stateSolve = new int[9][9];
 	int numberCellIllegal = 0;
-	JButton jbNew, jbSolved, jbCheck, jbReset;
+	JButton jbNew, jbSolved, jbCheck;
 	JButton lbMessage;
 	JComboBox<String> comboBox;
 	Controller controller;
@@ -35,12 +36,12 @@ public class SudokuGame extends JFrame implements ActionListener {
 	ColorUIResource colorText = new ColorUIResource(255, 51, 51);
 	Color colorSolved = new Color(255, 221, 221);
 
+	Graph graph;
+
 	public SudokuGame(Controller controller, SudokuModel model) {
 		this.controller = controller;
 		this.model = model;
 		init();
-		//
-
 	}
 
 	public SudokuGame() {
@@ -348,13 +349,14 @@ public class SudokuGame extends JFrame implements ActionListener {
 				lbMessage.setText("Tạo trò chơi thất bại");
 			}
 			System.out.println("Xong rồi đây");
+			graph = new Graph(state);
+			graph.init();
 			display2(state);
 		}
 		if (e.getSource() == jbSolved) {
 			if (!isEmtry()) {
 				for (int i = 0; i < 9; i++) {
 					for (int j = 0; j < 9; j++) {
-
 						if (board[i][j].isEditable()) {
 							board[i][j].setText(String.valueOf(stateSolve[i][j]));
 							board[i][j].setBackground(colorSolved);
