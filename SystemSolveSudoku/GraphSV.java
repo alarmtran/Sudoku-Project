@@ -133,21 +133,6 @@ public class GraphSV implements Comparable<GraphSV> {
 		graphSV.theMax = theMax;
 	}
 
-	/*public void toStrings() {
-		for (int j = 0; j < 9; j++) {
-			for (int k = 0; k < 9; k++) {
-				if (k == 0)
-					System.out.print("{" + this.matrix[j][k] + ", ");
-				else if (k == 8)
-					System.out.print(this.matrix[j][k] + "}, ");
-				else
-					System.out.print(this.matrix[j][k] + ", ");
-			}
-			System.out.println();
-		}
-
-	}*/
-
 	public GraphSV crossOver(GraphSV g) {
 		GraphSV g1 = new GraphSV();
 		GraphSV g2 = new GraphSV();
