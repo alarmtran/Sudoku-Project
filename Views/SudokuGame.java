@@ -56,7 +56,7 @@ public class SudokuGame extends JFrame implements ActionListener {
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-
+// Tạo giao diện
 	public void createView() {
 		JPanel container = new JPanel();
 		add(container);
