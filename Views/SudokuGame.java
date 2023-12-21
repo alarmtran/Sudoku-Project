@@ -35,7 +35,6 @@ public class SudokuGame extends JFrame implements ActionListener {
 	ColorUIResource colorCell = new ColorUIResource(178, 231, 250);
 	ColorUIResource colorText = new ColorUIResource(255, 51, 51);
 	Color colorSolved = new Color(255, 221, 221);
-
 	Graph graph;
 
 	public SudokuGame(Controller controller, SudokuModel model) {
@@ -72,7 +71,7 @@ public class SudokuGame extends JFrame implements ActionListener {
 		container.add(boardPanel, BorderLayout.CENTER);
 		container.add(controlPanel, BorderLayout.EAST);
 
-		//
+		//Tạo ô vuông ma trận 9x9 và chỉnh font chữ số thành font Arial và in đậm
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
 
@@ -89,30 +88,30 @@ public class SudokuGame extends JFrame implements ActionListener {
 			}
 		}
 		//
-
+		//Tạo một combo box chọn mức độ chơi
 		comboBox = new JComboBox<String>(new String[] { "Dễ", "Trung Bình", "Khó" });
 		comboBox.setPreferredSize(new DimensionUIResource(110, 20));
 		comboBox.setBackground(colorMain);
 		comboBox.setForeground(Color.white);
 		comboBox.setOpaque(true);
-
+		
 		JLabel label = new JLabel("Độ khó: ");
 		JPanel headerPanel = new JPanel();
 		headerPanel.add(label);
 		headerPanel.add(comboBox);
 		headerPanel.setBackground(Color.white);
 		headerPanel.setBorder(new LineBorder(colorMain, 2));
-
+		//Nút trò chơi mới : jbNew
 		jbNew = new JButton("Trò chơi mới");
 		jbNew.addActionListener(this);
 		setUI(jbNew);
 		setHover(jbNew);
-
+		//Nút giải sudoku
 		jbSolved = new JButton("Giải");
 		setUI(jbSolved);
 		setHover(jbSolved);
 		jbSolved.addActionListener(this);
-
+		//Nút kiểm tra 
 		jbCheck = new JButton("Kiểm tra");
 		setUI(jbCheck);
 		setHover(jbCheck);
@@ -172,9 +171,10 @@ public class SudokuGame extends JFrame implements ActionListener {
 			}
 		});
 	}
-
+	//chỉnh độ khó
 	public void level() {
-		int level = 2;
+		int level = 2;//độ khó mặc định
+		//nếu ở combo box chỉnh độ khó ta chọn cái index khác nhau thì thay đổi level
 		switch (comboBox.getSelectedIndex()) {
 		case 0:
 			level = 2;
@@ -189,6 +189,7 @@ public class SudokuGame extends JFrame implements ActionListener {
 		default:
 			break;
 		}
+		//Ứng với mỗi độ khó thì số ô ma trận bị thay đổi thành số 0 càng nhiều
 		for (int l = 0; l < level; l++) {
 			for (int k = 0; k < 9; k++) {
 				int i = 1 + random.nextInt(8);
@@ -228,7 +229,7 @@ public class SudokuGame extends JFrame implements ActionListener {
 		}
 		numberCellIllegal=0;
 	}
-
+	//Cái này chỉ để in ra ma trận để nhìn ở Terminal
 	public void display2(int board[][]) {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -240,6 +241,10 @@ public class SudokuGame extends JFrame implements ActionListener {
 
 		System.out.println();
 	}
+
+
+	
+	//Làm mới lại bảng để bảng trắng tinh
 
 	public void resetBoard() {
 		for (int i = 0; i < 9; i++) {
@@ -295,6 +300,8 @@ public class SudokuGame extends JFrame implements ActionListener {
 		}
 	}
 
+	//Kiểm tra xem còn ô nào trống trong bảng Sudoku ko 
+
 	public boolean isEmtry() {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -306,7 +313,7 @@ public class SudokuGame extends JFrame implements ActionListener {
 		}
 		return true;
 	}
-
+	//Hiển thị bảng
 	public void showBoard() {
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++) {
@@ -332,27 +339,29 @@ public class SudokuGame extends JFrame implements ActionListener {
 		}
 		return result;
 	}
-
+	//Thực hiện các chức năng của nút làm mới trò chơi , giải trò chơi , kiểm tra trò chơi
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == jbNew) {
+			//Nếu ấn vào trò chơi mới thì ActionEvent là jbNew
 			resetBoard();
-			controller.makeNewGame();
-			state = copyState(model.getGenome().getMatrix());
-			stateSolve = copyState(model.getGenome().getMatrix());
-			level();
-			showBoard();
-			display2(state);
-			if(model.isSuccess()) {
+			controller.makeNewGame(); //Tạo trò chơi mới 
+			state = copyState(model.getGenome().getMatrix()); //Ma trận hiển thị
+			stateSolve = copyState(model.getGenome().getMatrix()); //Ma trận được giải sẵn
+			level(); //Tạo độ khó
+			showBoard(); //Hiển thị bảng
+			display2(state); //In ma trận ra terminal
+			if(model.isSuccess()) { //Nếu giải được ma trận đó => in ra tạo thành công
 				lbMessage.setText("Tạo trò chơi thành công");
-			}else {
+			}else { //Không giải được thì tạo thất bại
 				lbMessage.setText("Tạo trò chơi thất bại");
 			}
 			System.out.println("Xong rồi đây");
-			graph = new Graph(state);
-			graph.init();
+			graph = new Graph(state); //Mô hình hóa Sudoku thành 1 ma trận kề
+			graph.init(); //Đây là bước liên kết các ô Sudoku thành đồ thị 
 			display2(state);
 		}
+		//Tương tự với jbSolved và jbCheck
 		if (e.getSource() == jbSolved) {
 			if (!isEmtry()) {
 				for (int i = 0; i < 9; i++) {
