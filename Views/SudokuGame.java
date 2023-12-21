@@ -47,7 +47,7 @@ public class SudokuGame extends JFrame implements ActionListener {
 	public SudokuGame() {
 
 	}
-
+// Tạo ra khung trò chơi
 	public void init() {
 		setTitle("Sudoku Game");
 		setSize(700, 500);
