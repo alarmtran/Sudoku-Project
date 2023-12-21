@@ -209,9 +209,11 @@ public class SudokuGame extends JFrame implements ActionListener {
 			for (int j = 0; j < 9; j++) {
 				if (board[i][j].isEditable()) {
 					String inputUser = board[i][j].getText();
-					if (!inputUser.equals(String.valueOf(stateSolve[i][j]))) {
+					//Lấy ô ma trận người dùng nhập vào
+					if (!inputUser.equals(String.valueOf(stateSolve[i][j]))) { //Bước này so với ma trận đáp án xem có trùng ko nếu ko trùng thì win = false
 						win = false;
 						numberCellIllegal++;
+						//Báo sai và tô đỏ ô đó
 						board[i][j].setBackground(Color.red);
 						board[i][j].setForeground(Color.yellow);
 					} else {
@@ -270,6 +272,8 @@ public class SudokuGame extends JFrame implements ActionListener {
 		return true;
 	}
 
+
+	
 	public void handleExceptionInput() {
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board.length; j++) {
